@@ -97,7 +97,7 @@ class Ui_Form(object):
     # setupUi
 
     def retranslateUi(self, Form):
-        Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
+        Form.setWindowTitle(QCoreApplication.translate("登录", u"登录", None))
         self.label_2.setText(QCoreApplication.translate("Form", u"\u5bc6\u7801", None))
         self.label.setText(QCoreApplication.translate("Form", u"\u8d26\u53f7", None))
         self.lineEdit.setPlaceholderText(QCoreApplication.translate("Form", u"\u8bf7\u8f93\u5165\u8d26\u53f7", None))

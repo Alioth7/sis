@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QApplication, QWidget, QLineEdit, QMessageBox
 from loginUi import Ui_Form
 
 import os
-userFile = os.path.join('.', 'data', 'students.csv')
+userFile = os.path.join(os.path.dirname(__file__), 'data', 'students.csv')
 
 class LoginWindow(QWidget, Ui_Form):
     def __init__(self):
