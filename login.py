@@ -3,12 +3,16 @@ import sys
 import pandas as pd
 
 from PySide6.QtWidgets import QApplication, QWidget, QLineEdit, QMessageBox
+from PySide6.QtCore import Signal  # 新增导入 Signal
 from loginUi import Ui_Form
 
 import os
 userFile = os.path.join(os.path.dirname(__file__), 'data', 'students.csv')
 
 class LoginWindow(QWidget, Ui_Form):
+    # 登录成功信号，携带账号字符串
+    login_success = Signal(str)
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -33,11 +37,15 @@ class LoginWindow(QWidget, Ui_Form):
             df = pd.read_csv(userFile)
         except pd.errors.EmptyDataError:
             df = pd.DataFrame(columns=['account', 'password'])
+        except FileNotFoundError:
+            df = pd.DataFrame(columns=['account', 'password'])
 
         if account in df['account'].values:
             QMessageBox.warning(self, "警告", "账号已被注册")
             return
 
+        # 确保目录存在
+        os.makedirs(os.path.dirname(userFile), exist_ok=True)
         # 将账号密码写入csv文件
         new_user = pd.DataFrame({'account': [account], 'password': [password]})
         df = pd.concat([df, new_user], ignore_index=True)
@@ -61,14 +69,14 @@ class LoginWindow(QWidget, Ui_Form):
 
         # 登录成功
         QMessageBox.information(self, "信息", "登录成功")
-        # TODO: 打开主窗口
-
+        # 发射登录成功信号（供 run.py 捕获并打开主窗口）
+        self.login_success.emit(account)
 
     def validate(self, account, password):
         # 读取csv文件
         try:
             df = pd.read_csv(userFile)
-        except pd.errors.EmptyDataError:
+        except (pd.errors.EmptyDataError, FileNotFoundError):
             return False
 
         # 检查账号和密码是否匹配
