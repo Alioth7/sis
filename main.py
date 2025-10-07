@@ -161,8 +161,7 @@ class mainWindow(QMainWindow, Ui_MainWindow):
         if df.empty:
             QMessageBox.information(self, "信息", "未找到该学生成绩")
             return
-
-        # Latest score per subject (keep order, use groupby last)
+        # 保留每个科目最新成绩
         latest_per_subject = df.groupby('subject', as_index=False).last()
         total = latest_per_subject['score'].sum()
         lines = "\n".join(f"{row.subject}: {row.score}" for row in latest_per_subject.itertuples())
